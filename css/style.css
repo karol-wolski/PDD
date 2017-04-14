@@ -1,0 +1,118 @@
+form#form
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
+
+.error 
+{
+	border: 1px solid #CB0000;
+}
+
+.success 
+{
+	border: 1px solid #03E122;
+}
+
+.tablesorter-headerUnSorted{
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+.tablesorter-headerAsc {
+	background-image: url(asc.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+.tablesorter-headerDesc {
+	background-image: url(desc.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+.sorter-false {
+	background-image: none;
+}
+
+.sortButton
+{
+	margin-top: 15px;
+	margin-bottom: 30px;
+}
+
+.sortButton div .btn
+{
+	// display: block;
+	width: 100%;	
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.btn-table
+{
+	display: block;
+	width: 100%;
+	margin-bottom: 2px;
+}
+
+.singleComment
+{
+	border: 2px solid black;
+}
+
+.chat
+{
+	position: fixed;
+	right: 1.8em;
+	bottom: 1.8em;
+	z-index: 999;
+}
+
+.glyphicon-style
+{
+	cursor: pointer;
+	padding: 20px;
+	margin: 10px;
+	border-radius: 90px;
+	background-color: #0668EE;
+	color: #FFFFFF;
+	
+}
+
+.glyphicon-style:hover
+{
+	background-color: #243BE6;
+}
+
+.chatMessage
+{
+	width: 100%;
+}
+
+.comment
+{
+	background-color: #98D0E7;
+	margin-bottom: 2px;
+	padding: 10px;
+}
+
+.modal-position
+{
+	display: flex;
+}
+
+.commentDealer
+{
+	background-color: #61FC77;
+}
+
+
+.author-footer
+{
+	text-align: center;
+}

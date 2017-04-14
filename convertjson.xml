@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <row>
+    <id>2</id>
+    <nazwa>ProduktB</nazwa>
+    <netto>10</netto>
+    <vat>23</vat>
+    <brutto>12.3</brutto>
+    <kategoria>Kategoira 2</kategoria>
+    <opcja>Opcja1 Opcja2 </opcja>
+    <ocena>2</ocena>
+    <kod>10-01</kod>
+    <zdjecie>img/produktB.jpg</zdjecie>
+  </row>
+  <row>
+    <id>1</id>
+    <nazwa>ProduktA</nazwa>
+    <netto>5</netto>
+    <vat>23</vat>
+    <brutto>6.15</brutto>
+    <kategoria>Kategoira 1</kategoria>
+    <opcja>Opcja1 Opcja2 </opcja>
+    <ocena>1</ocena>
+    <kod>10-00</kod>
+    <zdjecie>img/produktA.jpg</zdjecie>
+  </row>
+  <row>
+    <id>3</id>
+    <nazwa>ProduktC</nazwa>
+    <netto>14.99</netto>
+    <vat>23</vat>
+    <brutto>18.44</brutto>
+    <kategoria>Kategoira 1</kategoria>
+    <opcja>Opcja2 Opcja3 </opcja>
+    <ocena>2</ocena>
+    <kod>10-02</kod>
+    <zdjecie>img/produktC.jpg</zdjecie>
+  </row>
+  <row>
+    <id>4</id>
+    <nazwa>ProduktD</nazwa>
+    <netto>19.99</netto>
+    <vat>23</vat>
+    <brutto>24.59</brutto>
+    <kategoria>Kategoira 2</kategoria>
+    <opcja>Opcja2 Opcja4 </opcja>
+    <ocena>3</ocena>
+    <kod>10-03</kod>
+    <zdjecie>img/produktD.jpg</zdjecie>
+  </row>
+  <row>
+    <id>5</id>
+    <nazwa>ProduktE</nazwa>
+    <netto>19.99</netto>
+    <vat>23</vat>
+    <brutto>24.59</brutto>
+    <kategoria>Kategoira 3</kategoria>
+    <opcja>Opcja1 Opcja2 Opcja3 </opcja>
+    <ocena>3</ocena>
+    <kod>10-04</kod>
+    <zdjecie>img/produktE.jpg</zdjecie>
+  </row>
+  <row>
+    <id>6</id>
+    <nazwa>ProduktF</nazwa>
+    <netto>29.99</netto>
+    <vat>23</vat>
+    <brutto>36.89</brutto>
+    <kategoria>Kategoira 3</kategoria>
+    <opcja>Opcja2 Opcja3 </opcja>
+    <ocena>4</ocena>
+    <kod>10-05</kod>
+    <zdjecie>img/produktF.jpg</zdjecie>
+  </row>
+  <row>
+    <id>7</id>
+    <nazwa>ProduktG</nazwa>
+    <netto>29.99</netto>
+    <vat>23</vat>
+    <brutto>36.89</brutto>
+    <kategoria>Kategoira 3</kategoria>
+    <opcja>Opcja1 Opcja2 </opcja>
+    <ocena>3</ocena>
+    <kod>10-06</kod>
+    <zdjecie>img/produktG.jpg</zdjecie>
+  </row>
+  <row>
+    <id>8</id>
+    <nazwa>ProduktH</nazwa>
+    <netto>39.99</netto>
+    <vat>23</vat>
+    <brutto>49.19</brutto>
+    <kategoria>Kategoira 1</kategoria>
+    <opcja>Opcja2 Opcja4 </opcja>
+    <ocena>4</ocena>
+    <kod>10-07</kod>
+    <zdjecie>img/produktH.jpg</zdjecie>
+  </row>
+  <row>
+    <id>9</id>
+    <nazwa>ProduktI</nazwa>
+    <netto>79.99</netto>
+    <vat>23</vat>
+    <brutto>98.39</brutto>
+    <kategoria>Kategoira 1</kategoria>
+    <opcja>Opcja3 Opcja4 </opcja>
+    <ocena>5</ocena>
+    <kod>10-08</kod>
+    <zdjecie>img/produktI.jpg</zdjecie>
+  </row>
+  <row>
+    <id>10</id>
+    <nazwa>ProduktJ</nazwa>
+    <netto>99.99</netto>
+    <vat>23</vat>
+    <brutto>122.99</brutto>
+    <kategoria>Kategoira 1</kategoria>
+    <opcja>Opcja4 Opcja5 </opcja>
+    <ocena>5</ocena>
+    <kod>10-09</kod>
+    <zdjecie>img/produktJ.jpg</zdjecie>
+  </row>
+</root>
