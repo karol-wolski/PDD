@@ -23,7 +23,7 @@
 		<script src="js/jquery.tablesorter.widgets.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="js/bootstrap.min.js"></script>
-		<!-- <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script> -->
+		<script src="js/jquery.cookie.min.js"></script>
 
 		<script src="js/pdd.js"></script>
 	</head>
@@ -47,11 +47,10 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 				<li><a href="#" onclick="createTable('1')">Baza danych</a></li>
-				<li><a href="#">Cookie</a></li>
 				<li><a href="#" onclick="createTable('2')">XML</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">Koszyk</a></li>
+				<li><a role="button" onclick="showCart()" name="showCart" id="showCart">Koszyk</a></li>
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
@@ -60,8 +59,7 @@
 <div class="container" id="container">
 	<div class="row">
 		<div class="col-md-8 .col-md-offset-2">
-			<!-- <form name="form" action=""> -->
-		<form class="form-horizontal" id="form" role="form" method="POST" action="php/sendForm.php" name="form">
+		<form class="form-horizontal" id="form" role="form" method="POST" name="form">
 			<div class="form-group" id="productNameGroup">
 				<label for="productName">Nazwa towaru</label>
 				<input onchange="ValidationName()" type="text" class="form-control" id="productName" name="productName" maxlength="10" placeholder="" required>
@@ -145,9 +143,7 @@
 		</div>		
 	</div>
 </div>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#koszyk">
-  Dodaj do koszyka
-</button>
+
 <span id="result"></span>
 <div class="chat">
 <button type="button" class="glyphicon-style" data-toggle="modal" data-target="#chat">
@@ -156,49 +152,9 @@
 </div>
 
 <!-- KOSZYK -->
-
-<!-- Button trigger modal -->
-
-
 <!-- Modal -->
-<div class="modal fade" id="koszyk" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-	<div class="modal-content">
-	  <div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h4 class="modal-title" id="myModalLabel">Koszyk</h4>
-	  </div>
-	  <div class="modal-body">
-		<table cellspacing="1" class="table table-hover" id="basketTable">
-			<thead>
-				<tr>
-					<th>Nazwa</th>
-					<th>Cena brutto</th>
-					<th>Liczba sztuk</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>aaa</td>
-					<td>12</td>
-					<td><input type="number" class="form-control" id="itemsNumber" name="itemsNumber" min="1" placeholder="Podaj liczbę sztuk" value="1"></td>
-				</tr>
-			</tbody>
-		</table>
-		Sposób dostawy: 
-		<select class="form-control">
-		  <option>Kurier - 25 zl</option>
-		  <option selected="selected">Poczta - 15 zl</option>
-		  <option>Odbiór osobisty - 0 zl</option>
-		</select>
-		Do zapaty: 
-		<input type="text" class="form-control" id="itemsPrice" name="itemsPrice" disabled>
-	  </div>
-	  <div class="modal-footer">
-		<button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
-		<button type="button" id="buyItems" class="btn btn-primary">Kup</button>
-	  </div>
-	</div>
+<div class="modal fade" id="cart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" id="cartModal" role="document">
   </div>
 </div>
 
@@ -245,40 +201,31 @@
 	</div>
 </footer>
 
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		
+<script>
 
-	<script>
-		// Zamykanie koszyka i komunikat o dokonaniu zakupu
-		$(document).on('click', '#buyItems', function()
-		{
-			$('#koszyk').modal('hide');
-			alert("Dokonano zakupu.");
+// DOPRACOWAĆ WYSYŁANIE KOMENTARZY
+$(document).on('click', '#sendComment', function()
+{ 
+	var id_product=document.getElementById("ID_product").value;
+	var name = document.getElementById("authorComment").value;
+	var comment = document.getElementById("textComment").value;
+	$.post("php/sendComment.php", {
+			id: id_product,
+			name: name,
+			comment: comment
+		}, function(data){
+			console.log('Wyslane');
+			var content = '<div class="col-md-12">';
+			content += '<p>Autor: ' + name + '</p>';
+			content += '<p>Komentarz: ' + comment + '</p>';
+			content += '</div>';
+			var con = document.getElementById("formCommentGroup");
+
+			var div = document.createElement("div");
+			div.innerHTML = content;
+			con.append(div);
 		});
-
-		// DOPRACOWAĆ WYSYŁANIE KOMENTARZY
-		$(document).on('click', '#sendComment', function()
-		{ 
-			var id_product=document.getElementById("ID_product").value;
-			var name = document.getElementById("authorComment").value;
-			var comment = document.getElementById("textComment").value;
-			$.post("php/sendComment.php", {
-					id: id_product,
-					name: name,
-					comment: comment
-				}, function(data){
-					var content = '<div class="col-md-12">';
-					content += '<p>Autor: ' + name + '</p>';
-					content += '<p>Komentarz: ' + comment + '</p>';
-					content += '</div>';
-					var con = document.getElementById("formCommentGroup");
-
-					var div = document.createElement("div");
-					div.innerHTML = content;
-					con.append(div);
-				});
-		});
-	
+});
 	</script>
 	</body>
 </html>

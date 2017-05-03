@@ -36,18 +36,6 @@ function errorFunction(getInput, getContent)
 	input.appendChild(paragraph);
 }
 
-// Funkcja pomocnicza do suksesu
-function successFunction(getInput)
-{
-	var input = getInput;
-	error = document.getElementById("error");
-	input.setAttribute("class", "form-group has-success");
-	if (input.lastChild == error) 
-	{
-		input.removeChild(error)
-	}
-}
-
 // Walidacja nazwy
 function ValidationName()
 {
@@ -56,8 +44,6 @@ function ValidationName()
 	// sprawdzenie czy produkt już istnieje
 	$.getJSON("php/mysqlToJSON.php", function(data)
 	{
-		var items = [];
-
 		$.each(data, function(key, val)
 		{
 			if (productName === val.nazwa) 
@@ -65,6 +51,7 @@ function ValidationName()
 				var input = document.getElementById("productNameGroup");
 				var content = document.createTextNode("Produkt o takiej nazwie już istnieje.");
 				errorFunction(input, content);
+				// return false;
 			}
 		});
 	});
@@ -104,11 +91,10 @@ function ValidationName()
 	}
 }
 
-// Walidacja kodu 
+// Walidacja Kodu towaru
 function ValidationCode()
 {
 	var productCode = document.getElementById("productCode").value;
-	// Walidacja Kodu towaru
 	// sprawdzenie czy kod towaru jest pusty
 	if( productCode == "")
 	{
@@ -118,7 +104,6 @@ function ValidationCode()
 		return false;
 	}
 	// sprawdzenie czy kod ma inny format niż xx-xx 
-	// else if( (/(\d{2}-\d{2}$)/.test(productCode)))
 	else if( productCode.search(/(\d{2}-\d{2}$)/) === -1)	
 	{
 		var input = document.getElementById("productCodeGroup");
@@ -126,13 +111,6 @@ function ValidationCode()
 		errorFunction(input, content);
 		return false;
 	}
-	// else if( productCode.search(/(\d{2}[^a-zA-Z0-9]-\d{2}[^a-zA-Z0-9]$)/) !== -1)
-	// {
-	// 	var input = document.getElementById("productCodeGroup");
-	// 	var content = document.createTextNode("Kod towru nie może mieć innych znaków niż A-Z, a-z, 0-9.");
-	// 	errorFunction(input, content);
-	// return false;
-	// }
 	else 
 	{
 		var input = document.getElementById("productCodeGroup");
@@ -143,7 +121,6 @@ function ValidationCode()
 		}
 		return true;
 	}
-
 }
 
 // Walidacja ceny netto
@@ -296,110 +273,11 @@ function formValidation(form)
 	}
 }
 
-// Tworzenie tabeli 
-function dynamicTable()
-{
-	var content = '<div class="row">';
-	
-	content += '<div class="col-md-12 sortButton">';
-	content += '<h2 style="text-align:center">Sortuj tabelę</h2>';
-	content += '<div class="col-md-4">';
-	content += '<button type="button" id="nameAZ" data-sort="[[1,0]]" class="btn btn-default">Nazwa A - Z</button>';
-	content += '<button type="button" id="nameZA" data-sort="[[1,1]]" class="btn btn-default">Nazwa Z - A</button>';
-	content += '</div>';
-	content += '<div class="col-md-4">';
-	content += '<button type="button" id="priceAZ" class="btn btn-default">cena od najniższej</button>';
-	content += '<button type="button" id="priceZA" class="btn btn-default">cena od najwyższej</button>';
-	content += '</div>';
-	content += '<div class="col-md-4">';
-	content += '<button type="button" id="markAZ" class="btn btn-default">Ocena od najniższej</button>';
-	content += '<button type="button" id="markZA" class="btn btn-default">Ocena od najwyższej</button>';
-	content += '</div>';
-	content += '</div>';
-
-	content += '<div class="col-md-12 sortButton">';
-	content += '<h2 style="text-align:center">Wybierz widok produktów</h2>';
-	content += '<div class="col-md-6">';
-	content += '<button type="button" id="showTable" onclick="showTable()" class="btn btn-default">Lista</button>';
-	content += '</div>';
-	content += '<div class="col-md-6">';
-	content += '<button type="button" id="showGallery" onclick="showGallery()" class="btn btn-default">Galeria</button>';
-	content += '</div>';
-	content += '</div>';
-	
-	// content += '<button type="button" id="" onclick="" class="btn btn-default">Dodaj do koszyka</button>';
-
-	content += '<div class="col-md-12">';
-	content += '<div class="table-responsive">';
-	content += '<table cellspacing="1" class="table table-hover" id="table2">';
-	content += '<thead>';
-	content += '<tr>';
-	content += '<th>Opcje</th>';
-	content += '<th>Nazwa</th>';
-	content += '<th>Kod</th>';
-	content += '<th>Cena netto</th>';
-	content += '<th>Vat</th>';
-	content += '<th>Cena brutto</th>';
-	content += '<th>Kategoria</th>';
-	content += '<th>Opcja</th>';
-	content += '<th>Ocena</th>';
-	content += '<th>Zdjęcie</th>';
-	content += '</tr>';
-	content += '</thead>';
-	
-
-	$.getJSON("php/mysqlToJSON.php", function(data){
-		
-		var items = [];
-
-		$.each(data, function(key, val){
-			items.push('<tr role="row">');
-			items.push('<td><input type="checkbox"></br>');
-			items.push('<button type="button" class="btn btn-warning btn-table">Edytuj</button>');
-			items.push('<button type="button" id="deleteProduct" data-idp="'+ val.id +'" class="btn btn-danger btn-table">Usuń</button>');
-			items.push('<button type="button" class="btn btn-info btn-table" data-toggle="modal" data-target="#myModal'+val.id+'" onclick="productDetails('+val.id+')">Szczególy</button></td>');
-			items.push("<td>" + val.nazwa + "</td>");
-			items.push("<td>" + val.kod + "</td>");
-			items.push("<td>" + parseFloat(val.netto).toFixed(2) + "</td>");
-			items.push("<td>" + val.vat + "</td>");
-			items.push("<td>" + parseFloat(val.brutto).toFixed(2) + "</td>");
-			items.push("<td>" + val.kategoria + "</td>");
-			items.push("<td>" + val.opcja + "</td>");
-			items.push("<td>" + val.ocena + "</td>");
-			if(val.zdjecie != "")
-			{
-				items.push("<td><img src='" + val.zdjecie + "' height='200' width='200' alt='Produkt'></td>");
-			}
-			else
-			{
-				items.push('<td><img src="img/img.png" height="200" width="200" alt="Produkt"></td>');
-			}
-
-			items.push("</tr>");
-			// productDetails();
-		});
-		$("<tbody/>", {html: items.join("")}).appendTo("#table2");
-	});
-
-	content += '</table>';
-	content += '</div>';
-	content += '</div>';
-	content += '</div>';
-	var con = document.getElementById("container");
-	var div = document.createElement("div");
-	div.setAttribute("class", "col-md-12");
-	div.setAttribute("id", "table");
-	div.innerHTML = content;
-	con.append(div);
-}
-
 // Usuwanie tabeli
 function removeTable()
 {
 	var con = $("#container");
-	con.find("table").remove();
-	con.find(".sortButton").remove();
-	
+	con.find("#table").remove();	
 }
 
 // Tworzenie galerii
@@ -461,7 +339,6 @@ function removeGallery()
 {
 	var con = $("#container");
 	con.find("#gallery").remove();
-	
 }
 
 // Wyświetlanie tabeli
@@ -469,7 +346,7 @@ function showTable()
 {
 	removeGallery();
 	removeTable();
-	dynamicTable();
+	createTable('1');
 }
 
 // Wyświetalnie galerii
@@ -515,9 +392,8 @@ function createTable(a)
 	content += '<div class="col-md-6">';
 	content += '<button type="button" id="showGallery" onclick="showGallery()" class="btn btn-default">Galeria</button>';
 	content += '</div>';
+	content += '<button type="button" class="btn btn-primary" data-toggle="modal" onclick="addToCart()" data-target="#koszyk">Dodaj do koszyka</button>';
 	content += '</div>';
-	
-	// content += '<button type="button" id="" onclick="" class="btn btn-default">Dodaj do koszyka</button>';
 
 	content += '<div class="col-md-12">';
 	content += '<div class="table-responsive">';
@@ -537,23 +413,20 @@ function createTable(a)
 	content += '</tr>';
 	content += '</thead>';
 
-	var ab = a;
+	switch (a) {
+		// baza danych
+		case "1":
+			dbTable();
+			break;
 
-	switch (ab) {
-			// database
-			case "1":
-				dbTable();
-				break;
+		// XML
+		case "2":
+			xmlTable();
+			break;
 
-			// XML
-			case "2":
-				xmlTable();
-				break;
-
-			default:
-				// statements_def
-				break;
-		}	
+		default:
+			break;
+	}	
 
 	content += '</table>';
 	content += '</div>';
@@ -571,25 +444,24 @@ function createTable(a)
 function dbTable()
 {
 	$.getJSON("php/mysqlToJSON.php", function(data)
-	{
-		
+	{	
 		var items = [];
 
 		$.each(data, function(key, val)
 		{
-			items.push('<tr role="row">');
-			items.push('<td><input type="checkbox"></br>');
-			items.push('<button type="button" class="btn btn-warning btn-table">Edytuj</button>');
+			items.push('<tr id="row'+val.id+'" role="row">');
+			items.push('<td><input name="tableCheckBox[]" id="tableCheckBox[]" type="checkbox" value="'+ val.id + '"></br>');
+			items.push('<button type="button" class="btn btn-warning btn-table" onclick="editProduct('+val.id+')">Edytuj</button>');
 			items.push('<button type="button" id="deleteProduct" data-idp="'+ val.id +'" class="btn btn-danger btn-table">Usuń</button>');
 			items.push('<button type="button" class="btn btn-info btn-table" data-toggle="modal" data-target="#myModal'+val.id+'" onclick="productDetails('+val.id+')">Szczególy</button></td>');
-			items.push("<td>" + val.nazwa + "</td>");
-			items.push("<td>" + val.kod + "</td>");
-			items.push("<td>" + parseFloat(val.netto).toFixed(2) + "</td>");
-			items.push("<td>" + val.vat + "</td>");
-			items.push("<td>" + parseFloat(val.brutto).toFixed(2) + "</td>");
-			items.push("<td>" + val.kategoria + "</td>");
-			items.push("<td>" + val.opcja + "</td>");
-			items.push("<td>" + val.ocena + "</td>");
+			items.push('<td id="row_name'+val.id+'">' + val.nazwa + '</td>');
+			items.push('<td id="row_code'+val.id+'">' + val.kod + '</td>');
+			items.push('<td id="row_netto'+val.id+'">' + parseFloat(val.netto).toFixed(2) + '</td>');
+			items.push('<td id="row_vat'+val.id+'">' + val.vat + '</td>');
+			items.push('<td id="row_brutto'+val.id+'">' + parseFloat(val.brutto).toFixed(2) + '</td>');
+			items.push('<td id="row_category'+val.id+'">' + val.kategoria + '</td>');
+			items.push('<td id="row_option'+val.id+'">' + val.opcja + '</td>');
+			items.push('<td id="row_mark'+val.id+'">' + val.ocena + '</td>');
 			if(val.zdjecie != "")
 			{
 				items.push("<td><img src='" + val.zdjecie + "' height='200' width='200' alt='Produkt'></td>");
@@ -605,56 +477,49 @@ function dbTable()
 	});
 }
 
-// pobieranie danych z XML - DOPRACOWAĆ
+// pobieranie danych z XML
 function xmlTable()
 {
-	var list = $('#table2');
-	list.append('<tbody>');
-   $.ajax({
-    type: "GET" ,
-    url: "convertjson.xml" ,
-    dataType: "xml" ,
-    success: function(xml) {
+   	$.ajax({
+		url: "convertjson.xml" ,
+		dataType: "xml" ,
+		success: function(xml) 
+		{	
+			var items = [];
 
-    //var xmlDoc = $.parseXML( xml );   <------------------this line
-    //if single item
-    // var xmlfile = $(xml).find('row').text();  
-
-    //but if it's multible items then loop
-    $(xml).find('row').each(function(index, element){
-     var field = $(element)
-    // get the values we want
-    var id = field.find('id').text()
-    var name = field.find('nazwa').text()
-    var netto = field.find('netto').text()
-    var vat = field.find('vat').text()
-    var brutto = field.find('brutto').text()
-    var kategoria = field.find('kategoria').text()
-    var opcja = field.find('opcja').text()
-    var ocena = field.find('ocena').text()
-    var kod = field.find('kod').text()
-    var zdjecie = field.find('zdjecie').text()
-    // and append some html in the <dl> element we stored previously
-    list
-      .append('<tr>')
-      .append('<td><input type="checkbox"></br>')
-	  .append('<button type="button" class="btn btn-warning btn-table">Edytuj</button>')
-      .append('<button type="button" id="deleteProduct" data-idp="'+ id +'" class="btn btn-danger btn-table">Usuń</button>')
-	  .append('<button type="button" class="btn btn-info btn-table" data-toggle="modal" data-target="#myModal'+id+'" onclick="productDetails('+id+')">Szczególy</button></td>')
-      .append('<td>'+name+'</td>')
-      .append('<td>'+netto+'</td>')
-      .append('<td>'+vat+'</td>')
-      .append('<td>'+brutto+'</td>')
-      .append('<td>'+kategoria+'</td>')
-      .append('<td>'+opcja+'</td>')
-      .append('<td>'+ocena+'</td>')
-      .append('<td>'+kod+'</td>')
-      .append('<td>'+zdjecie+'</td>')
-      .append('</tr>');
-    }); 
-    }       
-});
-   list.append('</tbody>');
+			$(xml).find('root row').each(function()
+			{
+				var id = $(this).find('id').text();
+				var nazwa = $(this).find('nazwa').text();
+				var netto = $(this).find('netto').text();
+				var vat = $(this).find('vat').text();
+				var brutto = $(this).find('brutto').text();
+				var kategoria = $(this).find('kategoria').text();
+				var opcja = $(this).find('opcja').text();
+				var ocena = $(this).find('ocena').text();
+				var kod = $(this).find('kod').text();
+				var zdjecie = $(this).find('zdjecie').text();
+			
+				items.push('<tr role="row">');
+				items.push('<td>Brak</td>');
+				items.push("<td>" + nazwa + "</td>");
+				items.push("<td>" + kod + "</td>");
+				items.push("<td>" + parseFloat(netto).toFixed(2) + "</td>");
+				items.push("<td>" + vat + "</td>");
+				items.push("<td>" + parseFloat(brutto).toFixed(2) + "</td>");
+				items.push("<td>" + kategoria + "</td>");
+				items.push("<td>" + opcja + "</td>");
+				items.push("<td>" + ocena + "</td>");
+				items.push("<td><img src='" + zdjecie + "' height='200' width='200' alt='Produkt'></td>");
+				items.push("</tr>");
+			});
+		$("<tbody/>", {html: items.join("")}).appendTo("#table2");
+		},
+		error: function()
+		{
+			console.log("Nie dziala XML");
+		}       
+	});
 }
 
 // Wyświetlanie szczególów produktu
@@ -670,8 +535,8 @@ function productDetails(id)
 			if(id == val.id)
 			{
 				items.push('<div class="modal fade" id="myModal'+id+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel'+id+'" style="display: none;">');
-  				items.push('<div class="modal-dialog" role="document">');
-  				items.push('<div class="modal-content">');
+				items.push('<div class="modal-dialog" role="document">');
+				items.push('<div class="modal-content">');
 				items.push('<div class="modal-header">');
 				items.push('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
 				items.push('<h4 class="modal-title" id="myModalLabel'+id+'">'+ val.nazwa +'</h4>');
@@ -713,27 +578,26 @@ function productDetails(id)
 				$.getJSON("php/commentToJSON.php", function(data)
 				{			
 					var comments = [];
-					var commentproduct = $('.coment-product').value;
-					$.each(data, function(key, val)
+					var commentproduct = $('#comment-product').value;
+					$.each(data, function(keyComment, valComment)
 					{
-						if(id == val.id_product)
+						if(val.id == valComment.id_product)
 						{
-							if(!commentproduct)
+							if(commentproduct == '')
 							{
-								comments.push("<p>Autor: " + val.name + "</p>");
-								comments.push("<p>Komentarz: " + val.comment + "</p>");
+								comments.push("<p>Autor: " + valComment.name + "</p>");
+								comments.push("<p>Komentarz: " + valComment.comment + "</p>");
 							}
 							else
 							{
-								var con = $("#textCommentGroup");
-								con.find(commentproduct).remove();
-								comments.push("<p>Autor: " + val.name + "</p>");
-								comments.push("<p>Komentarz: " + val.comment + "</p>");
+								console.log('Comment product else');
+								$("#comment-product").remove();
+								comments.push("<p>Autor: " + valComment.name + "</p>");
+								comments.push("<p>Komentarz: " + valComment.comment + "</p>");
 							}
 						}
-
 					});
-					$("<div/>", {'class': 'col-md-12 coment-product', 'html': comments.join("")}).appendTo("#formCommentGroup");
+					$("<div/>", {'class': 'col-md-12 comment-product','id':'comment-product', 'html': comments.join("")}).appendTo("#formCommentGroup");
 				});
 
 				items.push('</div>');
@@ -749,49 +613,40 @@ function productDetails(id)
 	});
 }
 
-
 // Sortowanie tabeli po naglówkach i przyciskach
 function tabSort()
 {
 	$("#table2").tablesorter( {
 		 headers: { 
-			// assign the secound column (we start counting zero) 
 			0: { 
-				// disable it by setting the property sorter to false 
 				sorter: false 
 			}, 
 			1: { 
-				// disable it by setting the property sorter to false 
 				sorter: true 
 			}, 
-			// assign the third column (we start counting zero) 
 			2: { 
-				// disable it by setting the property sorter to false 
 				sorter: false 
 			},
 			3: { 
-				// disable it by setting the property sorter to false 
 				sorter: false 
 			},
 			4: { 
-				// disable it by setting the property sorter to false 
 				sorter: false 
 			},
 			5: { 
-				// disable it by setting the property sorter to false 
 				sorter: true 
 			},
 			6: { 
-				// disable it by setting the property sorter to false 
 				sorter: false 
 			},
 			7: { 
-				// disable it by setting the property sorter to false 
 				sorter: false 
 			},
 			8: { 
-				// disable it by setting the property sorter to false 
 				sorter: true 
+			},
+			9: { 
+				sorter: false 
 			}
 		} 
 	} );
@@ -895,35 +750,300 @@ $(document).on('click','#deleteProduct', function()
 		 success:function(data){  
 		 }  
 	});
-		removeTable();
-		dynamicTable(); 
+	removeTable();
+	createTable('1'); 
 });
+
+// Koszyk
+function addToCart()
+{
+	var i = 0;
+	$('#table2').find('input[type="checkbox"]:checked').each(function () {
+		var a = this['defaultValue'];
+		var itemsToCart = $('#row' + this['defaultValue'])[0]['children'];
+
+		name = itemsToCart[1]['innerHTML'];
+		bruttoPrice = itemsToCart[5]['innerHTML'];
+
+		var json_str = $.cookie("cart");
+		var values, length;
+		if (json_str != undefined)
+		{
+			values = JSON.parse(json_str);
+		}
+		else
+		{
+			values = [];
+		}
+
+		values.push({
+			"name": name,
+			"bruttoPrice": bruttoPrice,
+			"numberItems": "1",
+			"delivery": "post"
+		});
+		
+		var json_str = JSON.stringify(values);
+		$.cookie("cart", json_str, { expires: 7, path: '/'});
+		i++;
+		console.log($.cookie("cart"));
+	 });
+
+	if (i > 0)
+	{
+		showCart();
+	}
+}
+
+function showCart()
+{
+	var cartModal = $('#cartModal');
+
+	var json_str = $.cookie("cart");
+	var values;
+	if (json_str != undefined)
+		values = JSON.parse(json_str);
+
+	var content = '<div class="modal-content">';
+
+	content += '<div class="modal-header">';
+	content += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+	content += '<h4 class="modal-title" id="modalLabel">Koszyk</h4>';
+	content += '</div>';
+
+	content += '<div class="modal-body">';
+	if(values == undefined)
+	{
+		content += "Koszyk pusty";
+		content += '</div>'
+		content += '<div class="modal-footer">';
+		content += '<button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>';
+		content += '</div>';
+
+		content += '</div>';
+
+		cartModal.append(content);
+		$('#cart').modal('show');
+		$('#cart').on('hidden.bs.modal', function () {
+		    $('#cartModal').children().remove();
+		});
+		return;
+	}
+
+	content += '<table class="table-responsive table-hover" id="cartTable">';
+	content += '<thead>';
+	content += '<tr>';
+	content += '<th class="sorting_enabled">Nazwa towaru</th>';
+	content += '<th class="sorting_enabled"">Cena brutto</th>';
+	content += '<th class="sorting_disabled">Liczba sztuk</th>';
+	content += '</tr>';
+	content += '</thead>';
+	content += '<tbody>';
+	for(var value in values)
+	{
+		var post = "", courier = "", personal = "";
+		if (values[value]['delivery'] == "post")
+		{
+			post = "selected";
+		}
+		else if(values[value]['delivery'] == "courier")
+		{
+			courier = "selected";
+		}
+		else if(values[value]['delivery'] == "personal")
+		{
+			personal = "selected";
+		}
+		content += '<tr id="cartRow' + value + '">';
+		content += '<th>' + values[value]['name'] + '</th>';
+		content += '<th>' + values[value]['bruttoPrice'] + '</th>';
+		content += '<th><input type="number" class="form-control" name="numberItems' + value + '" id="numberItems' + value + '" required value="' + values[value]['numberItems'] + '" min="1" onchange="numberItemsChange(' + value +')"></th>';
+		content += '</tr>';
+	}
+	content += '</tbody>';
+	content += '</table>';
+	content += '<select class="form-control" id="deliveryOption' + value + '" name="deliveryOption' + value + '" onchange="deliveryChange(' + value + ')">';
+		content += '<option ' + post + ' value="post">Poczta 20zl</option>';
+		content += '<option ' + courier + ' value="courier">Kurier 25zl</option>';
+		content += '<option ' + personal + ' value="personal">Odbiór osobisty 0zl</option>';
+		content += '</select>';
+	content += '<label for="endPrice">Razem:</label><input type="text" class="form-control" name="endPrice" id="endPrice" readonly="">';
+	content += '</div>';
+
+	content += '<div class="modal-footer">';
+	content += '<button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>';
+	content += '<a class="btn btn-success btn-ok" id="buyItems" name="buyItems">Kup</a>';
+	content += '</div>';
+
+	content += '</div>';
+
+	cartModal.append(content);
+	$('#cart').modal('show');
+	$('#cart').on('hidden.bs.modal', function () {
+	    $('#cartModal').children().remove();
+	});
+	var buyItems = document.getElementById('buyItems');
+
+	buyItems.addEventListener('click', function() {
+		alert("Dokonano zakupu");
+		$('#cart').modal('hide');
+	    $.removeCookie('cart', { path: '/' });
+	}, false);
+
+	calculatePrice();
+}
+
+function numberItemsChange(obj)
+{
+	var json_str = $.cookie("cart");
+	var values;
+	if (json_str != undefined)
+		values = JSON.parse(json_str);
+
+	values[obj]['numberItems'] = $('#numberItems' + obj)[0]['value'];
+
+	var json_str = JSON.stringify(values);
+	$.cookie("cart", json_str, { expires: 7, path: '/'});
+	calculatePrice();
+}
+
+function deliveryChange(obj)
+{
+	var json_str = $.cookie("cart");
+	var values;
+	if (json_str != undefined)
+		values = JSON.parse(json_str);
+
+	var cos = $('#deliveryOption' + obj + " option:selected");
+	values[obj]['delivery'] = $('#deliveryOption' + obj)[0]['value'];
+
+	var json_str = JSON.stringify(values);
+	$.cookie("cart", json_str, { expires: 7, path: '/'});
+	calculatePrice();
+}
+
+function calculatePrice()
+{
+	var json_str = $.cookie("cart");
+	var values, price = 0;
+	if (json_str != undefined)
+		values = JSON.parse(json_str);
+
+		console.log(price);
+	for (var value in values)
+	{
+		var postPrice;
+		if (values[value]['delivery'] == "post")
+		{
+			postPrice = 20;
+		}
+		else if(values[value]['delivery'] == "courier")
+		{
+			postPrice = 25;
+		}
+		else if(values[value]['delivery'] == "personal")
+		{
+			postPrice = 0;
+		}
+
+		price += (parseFloat(values[value]['bruttoPrice']) * parseFloat(values[value]['numberItems'])) + parseFloat(postPrice); 
+		console.log(price);
+	}
+	price = price - 20;
+	$('#endPrice').val(price.toFixed(2));
+}
+
+function editProduct(id)
+{
+	var id = id;
+	var nazwa = document.getElementById("row_name"+id).innerHTML;
+	var kod = document.getElementById("row_code"+id).innerHTML;
+	var netto = document.getElementById("row_netto"+id).innerHTML;
+	var vat = document.getElementById("row_vat"+id).innerHTML;
+	var brutto = document.getElementById("row_brutto"+id).innerHTML;
+	var kategoria = document.getElementById("row_category"+id).innerHTML;
+	var opcja = document.getElementById("row_option"+id).innerHTML.split(" ");
+	var ocena = document.getElementById("row_mark"+id).innerHTML;
+
+	var inputID = document.createElement('input');
+	inputID.id = 'productID';
+	inputID.name = 'productID';
+	inputID.type = 'text';
+	inputID.value = id;
+	inputID.style.display = 'none';
+	document.getElementById("productNameGroup").append(inputID);
+
+	document.getElementById("productName").value=nazwa;
+	document.getElementById("productCode").value=kod;
+	document.getElementById("productNettoPrice").value=netto;
+	document.getElementById("productVat").value=vat;
+	document.getElementById("productBruttoPrice").value=brutto;
+
+	var button = document.createElement('button');
+	button.type = 'submit';
+	button.className = 'btn btn-default';
+	button.id = 'sendModify';
+	buttonCreateTextNode = document.createTextNode('Zapisz zmiany');
+	button.appendChild(buttonCreateTextNode);
+	document.getElementById("form").append(button);
+	document.getElementById("send").remove();
+	$('#productCategory').val(kategoria).change();
+	$("input[name='productRateOptions'][value='"+ ocena +"']").attr("checked", true);
+	
+	for (var i = 0; i < opcja.length; i++)
+	{
+		$("input:checkbox[value="+ opcja[i] +"]").attr("checked", true);
+	}
+}	
 
 $(document).ready(function(){
 	setInterval("tabSort()", 1000);
 	var table = $("table");
 
 	// Wysylanie formularza
-	$("#send").click( function() 
+	// $("#send").click( function() 
+	$(document).on('click','#send', function()
 	{
 		if (formValidation() == true) 
 		{
 			if(table != "")
 			{
-				$.post( $("#form").attr("action"), $("#form :input").serializeArray(), function(info){ });
+				$.post( "php/sendForm.php", $("#form :input").serializeArray(), function(info){ });
 				$("form").trigger('reset');
 				removeTable();
 				removeGallery();
-				dynamicTable();
+				createTable('1');
 			}
 			else
 			{
-				$.post( $("#form").attr("action"), $("#form :input").serializeArray(), function(info){ });
+				$.post( "php/sendForm.php" , $("#form :input").serializeArray(), function(info){ });
 				$("form").trigger('reset');
 				removeGallery();
-				dynamicTable();
+				createTable('1');
 			}
 		}
+	});
+
+	// Wysylanie zmodyfikowanego formularza
+	$(document).on('click','#sendModify', function()
+	{
+		$.post( "php/sendModifyForm.php", $("#form :input").serializeArray(), function(info){ 
+		 });
+		$("form")[0].reset();
+		$('input:checkbox').removeAttr('checked');
+		$('input:radio').removeAttr('checked');
+		var button = document.createElement('button');
+		button.type = 'submit';
+		button.className = 'btn btn-default';
+		button.id = 'send';
+		buttonCreateTextNode = document.createTextNode('Dodaj');
+		button.appendChild(buttonCreateTextNode);
+		document.getElementById("form").append(button);
+		document.getElementById("sendModify").remove();
+		document.getElementById("productID").remove();
+		removeTable();
+		removeGallery();
+		createTable('1');
 	});
 
 	$("#form").submit( function() {
