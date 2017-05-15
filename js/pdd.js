@@ -416,7 +416,8 @@ function createTable(a)
 	switch (a) {
 		// baza danych
 		case "1":
-			dbTable();
+		setTimeout('dbTable()', 500)
+			// dbTable();
 			break;
 
 		// XML
@@ -1043,6 +1044,7 @@ $(document).ready(function(){
 		document.getElementById("productID").remove();
 		removeTable();
 		removeGallery();
+		// setTimeout('createTable("1")', 1000);
 		createTable('1');
 	});
 

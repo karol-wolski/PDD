@@ -203,7 +203,7 @@
 
 <script>
 
-// DOPRACOWAĆ WYSYŁANIE KOMENTARZY
+// WYSYŁANIE KOMENTARZY
 $(document).on('click', '#sendComment', function()
 { 
 	var id_product=document.getElementById("ID_product").value;
